@@ -915,17 +915,32 @@ class DataRepresentationImpl implements DataRepresentation, DataRepresentationFa
 
     @Override
     public final Boolean isEmpty() {
-        return hasLength() && length() == 0;
+        return (hasLength() && length() == 0) || (hasProperties() && getProperties().isEmpty());
     }
 
     @Override
     public final Boolean isEmpty(String property) {
-        return hasLength(property) && getLength(property) == 0;
+        return (hasLength(property) && getLength(property) == 0) || (hasProperties(property) && getProperties(property).isEmpty());
     }
 
     @Override
     public final Boolean isEmpty(int position) {
-        return hasLength(position) && getLength(position) == 0;
+        return (hasLength(position) && getLength(position) == 0) || (hasProperties(position) && getProperties(position).isEmpty());
+    }
+
+    @Override
+    public final Boolean isNullOrEmpty() {
+        return isNull() || isEmpty();
+    }
+
+    @Override
+    public final Boolean isNullOrEmpty(String property) {
+        return isNull(property) || isEmpty(property);
+    }
+
+    @Override
+    public final Boolean isNullOrEmpty(int position) {
+        return isNull(position) || isEmpty(position);
     }
 
     @Override
@@ -944,8 +959,7 @@ class DataRepresentationImpl implements DataRepresentation, DataRepresentationFa
             for (int pos : positions) {
                 jsonArray.remove(pos);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
         return this;
     }
@@ -964,8 +978,7 @@ class DataRepresentationImpl implements DataRepresentation, DataRepresentationFa
     public final String getText(int position) {
         try {
             return getCleanString(instance.getAsJsonArray().get(position));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
         return null;
     }
